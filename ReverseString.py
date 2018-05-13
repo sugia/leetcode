@@ -11,8 +11,4 @@ class Solution(object):
         :type s: str
         :rtype: str
         """
-        res = ''
-        for c in s[::-1]:
-            res += c
-            
-        return res
+        return s[::-1]

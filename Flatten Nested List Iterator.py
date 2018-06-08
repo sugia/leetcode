@@ -70,7 +70,9 @@ class NestedIterator(object):
             else:
                 self.stack[-1][1] += 1
                 self.stack.append([node[idx].getList(), 0])
-
+        
+        return False
+    
 # Your NestedIterator object will be instantiated and called as such:
 # i, v = NestedIterator(nestedList), []
 # while i.hasNext(): v.append(i.next())

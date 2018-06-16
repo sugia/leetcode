@@ -21,3 +21,32 @@ class Solution:
             can.remove(s[left])
             left += 1
         return res
+
+    
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        dic = {}
+        res = 0
+        begin = 0
+        end = 0
+        while end < len(s):
+            if s[end] in dic:
+                dic[s[end]] += 1
+            else:
+                dic[s[end]] = 1
+                
+            end += 1
+            
+            while dic[s[end-1]] > 1:
+                if s[begin] in dic:
+                    dic[s[begin]] -= 1
+                begin += 1
+                
+            if end - begin > res:
+                res = end - begin
+                
+        return res

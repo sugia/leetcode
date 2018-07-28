@@ -21,34 +21,31 @@ class Solution(object):
         :type t: str
         :rtype: str
         """
+        
         dic = {}
         for c in t:
             if c in dic:
                 dic[c] += 1
             else:
                 dic[c] = 1
-                
-        counter = 0
-        begin = 0
-        end = 0
-        res = (float('-inf'), float('inf'))
+        counter = len(t)
         
-        while end < len(s):
-            if s[end] in dic:
-                if dic[s[end]] > 0:
-                    counter += 1
-                dic[s[end]] -= 1
-            end += 1
-            while counter == len(t):
-                if res[1] - res[0] > end - begin:
-                    res = (begin, end)
-                if s[begin] in dic:
-                    if dic[s[begin]] == 0:
-                        counter -= 1
-                    dic[s[begin]] += 1
-                begin += 1
-                    
-        if res == (float('-inf'), float('inf')):
-            return ""
-        return s[res[0]:res[1]]
-                        
+        res = ''
+        i = 0
+        for j in xrange(len(s)):
+            if s[j] in dic:
+                dic[s[j]] -= 1
+                if dic[s[j]] >= 0:
+                    counter -= 1
+            
+            while counter == 0:
+                if res == '' or len(res) > j - i + 1:
+                    res = s[i:j+1]
+                
+                if s[i] in dic:
+                    dic[s[i]] += 1
+                    if dic[s[i]] > 0:
+                        counter += 1
+                i += 1
+                
+        return res

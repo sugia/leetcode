@@ -37,3 +37,48 @@ class Solution(object):
                 idx += 1
                 
         return res
+
+    
+    
+    
+    
+# Definition for an interval.
+# class Interval(object):
+#     def __init__(self, s=0, e=0):
+#         self.start = s
+#         self.end = e
+
+class Solution(object):
+    def minMeetingRooms(self, intervals):
+        """
+        :type intervals: List[Interval]
+        :rtype: int
+        """
+        
+        start = sorted([x.start for x in intervals])
+        end = sorted([x.end for x in intervals])
+        
+        res = 0
+        tmp = 0
+        i = 0
+        j = 0
+        while i < len(start):
+            if j < len(end):
+                if start[i] < end[j]:
+                    if tmp > 0:
+                        tmp -= 1
+                    else:
+                        res += 1
+                    i += 1
+                else:
+                    tmp += 1
+                    j += 1
+            else:
+                if tmp > 0:
+                    tmp -= 1
+                else:
+                    res += 1
+                i += 1
+                
+        return res
+                    

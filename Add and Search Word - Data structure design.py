@@ -24,7 +24,7 @@ You may assume that all words are consist of lowercase letters a-z.
 class TrieNode:
     def __init__(self):
         self.children = {}
-        self.is_word = False
+        self.is_end = False
 
 class WordDictionary(object):
 
@@ -33,7 +33,6 @@ class WordDictionary(object):
         Initialize your data structure here.
         """
         self.root = TrieNode()
-        
 
     def addWord(self, word):
         """
@@ -41,16 +40,34 @@ class WordDictionary(object):
         :type word: str
         :rtype: void
         """
-        if not word:
-            return
-        
         node = self.root
-        for w in word:
-            if w not in node.children:
-                node.children[w] = TrieNode()
-                
-            node = node.children[w]
-        node.is_word = True
+        for c in word:
+            if c not in node.children:
+                tmp = TrieNode()
+                node.children[c] = tmp
+            node = node.children[c]
+        node.is_end = True
+        
+
+    def find(self, root, word):
+        node = root
+        for i in xrange(len(word)):
+            if word[i] == '.':
+                flag = False
+                for x in node.children:
+                    if self.find(node.children[x], word[i+1:]):
+                        flag = True
+                        break
+                if flag:
+                    return True
+                else:
+                    return False
+            else:
+                if word[i] not in node.children:
+                    return False
+                node = node.children[word[i]]
+        
+        return node != None and node.is_end
         
     def search(self, word):
         """
@@ -59,25 +76,7 @@ class WordDictionary(object):
         :rtype: bool
         """
         
-        if not word:
-            return False
-        
-        self.res = False
-        self.find(self.root, word)
-        return self.res 
-    
-    def find(self, node, word):
-        if not word:
-            if node.is_word:
-                self.res = True
-                return
-        elif word[0] == '.':
-            for c in node.children:
-                self.find(node.children[c], word[1:])
-        else:
-            if word[0] in node.children:
-                self.find(node.children[word[0]], word[1:])
-    
+        return self.find(self.root, word)
 
 
 # Your WordDictionary object will be instantiated and called as such:

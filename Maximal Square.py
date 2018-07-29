@@ -47,3 +47,49 @@ class Solution(object):
                     res = max(res, dp[i][j])
                     
         return res * res
+
+    
+
+    
+    
+    
+    
+class Solution(object):
+    def maximalSquare(self, matrix):
+        """
+        :type matrix: List[List[str]]
+        :rtype: int
+        """
+        
+        res = 0
+        if not matrix or not matrix[0]:
+            return res
+        
+        h = [0 for j in xrange(len(matrix[0]))]
+        for i in xrange(len(matrix)):
+            for j in xrange(len(matrix[i])):
+                if matrix[i][j] == '1':
+                    h[j] += 1
+                else:
+                    h[j] = 0
+            
+            res = max(res, self.find(h))
+            
+        return res ** 2
+    
+    def find(self, h):
+        res = 0
+        stack = []
+        i = 0
+        while i <= len(h):
+            if not stack or (i < len(h) and h[stack[-1]] < h[i]):
+                stack.append(i)
+                i += 1
+            else:
+                top = stack.pop()
+                if stack:
+                    res = max(res, min(h[top], (i - stack[-1] - 1)))
+                else:
+                    res = max(res, min(h[top], i))
+                    
+        return res

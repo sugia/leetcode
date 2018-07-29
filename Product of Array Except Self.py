@@ -17,19 +17,18 @@ class Solution(object):
         :type nums: List[int]
         :rtype: List[int]
         """
-        right_product = [1 for i in xrange(len(nums))]
-        prev = 1
-        for i in reversed(xrange(len(nums))):
-            prev *= nums[i]
-            right_product[i] = prev
-            
         res = [1 for i in xrange(len(nums))]
-        prev = 1
+        
+        left = 1
         for i in xrange(len(nums)):
-            if i + 1 < len(nums):
-                res[i] = prev * right_product[i+1]
-            else:
-                res[i] = prev
-            prev *= nums[i]
+            res[i] *= left
+            left *= nums[i]
+            
+        right = 1
+        for i in reversed(xrange(len(nums))):
+            res[i] *= right
+            right *= nums[i]
             
         return res
+        
+        

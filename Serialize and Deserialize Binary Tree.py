@@ -21,7 +21,6 @@ Note: Do not use class member/global/static variables to store states. Your seri
 
 
 '''
-
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, x):
@@ -38,39 +37,35 @@ class Codec:
         :rtype: str
         """
         vec = []
-        self.serializeHelper(root, vec)
+        self.ser(root, vec)
         return ' '.join(vec)
     
-    def serializeHelper(self, node, vec):
-        if not node:
+    def ser(self, node, vec):
+        if node:
+            vec.append(str(node.val))
+            self.ser(node.left, vec)
+            self.ser(node.right, vec)
+        else:
             vec.append('#')
-            return
-        vec.append(str(node.val))
-        self.serializeHelper(node.left, vec)
-        self.serializeHelper(node.right, vec)
-        
-        
+
     def deserialize(self, data):
         """Decodes your encoded data to tree.
         
         :type data: str
         :rtype: TreeNode
         """
-        vec = data.split(' ')
-        
-        return self.deserializeHelper(vec, 0)[0]
+        it = iter(data.split(' '))
+        return self.des(it)
     
-    def deserializeHelper(self, vec, idx):
-        if not vec:
-            return None, idx
-        
-        if vec[idx] == '#':
-            return None, idx
-        
-        root = TreeNode(int(vec[idx]))
-        root.left, idx = self.deserializeHelper(vec, idx + 1)
-        root.right, idx = self.deserializeHelper(vec, idx + 1)
-        return root, idx
+    def des(self, it):
+        tmp = next(it)
+        if tmp == '#':
+            return None
+        else:
+            node = TreeNode(int(tmp))
+            node.left = self.des(it)
+            node.right = self.des(it)
+            return node
 
 # Your Codec object will be instantiated and called as such:
 # codec = Codec()

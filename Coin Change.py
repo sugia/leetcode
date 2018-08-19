@@ -42,3 +42,24 @@ class Solution(object):
         
         dic[amount] = res
         return dic[amount]
+
+class Solution(object):
+    def coinChange(self, coins, amount):
+        """
+        :type coins: List[int]
+        :type amount: int
+        :rtype: int
+        """
+        
+        f = [float('inf') for i in xrange(amount + 1)]
+        f[0] = 0
+        
+        for i in xrange(1, len(f)):
+            for c in coins:
+                if i - c >= 0:
+                    f[i] = min(f[i], f[i-c] + 1)
+        
+        if f[-1] == float('inf'):
+            return -1
+        else:
+            return f[-1]

@@ -53,11 +53,9 @@ class Solution(object):
         
         f = [float('inf') for i in xrange(amount + 1)]
         f[0] = 0
-        
-        for i in xrange(1, len(f)):
-            for c in coins:
-                if i - c >= 0:
-                    f[i] = min(f[i], f[i-c] + 1)
+        for c in coins:
+            for i in xrange(c, len(f)):
+                f[i] = min(f[i], f[i-c] + 1)
         
         if f[-1] == float('inf'):
             return -1

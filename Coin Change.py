@@ -26,8 +26,6 @@ class Solution(object):
         """
         
         dic = {0: 0}
-        for c in coins:
-            dic[c] = 1
         
         res = self.find(coins, dic, amount)
         if res == float('inf'):

@@ -47,24 +47,17 @@ class Solution(object):
         :type wordList: List[str]
         :rtype: int
         """
-        if endWord not in wordList:
-            return 0
-        begin = set([beginWord])
-        end = set([endWord])
-        res = 2
-        wordList = set(wordList)
-        wordList.discard(beginWord)
-        
-        while begin:
-            begin = wordList & (set([word[:i] + ch + word[i+1:] for word in begin for i in xrange(len(beginWord)) for ch in 'abcdefghijklmnopqrstuvwxyz']))
-            
-            if begin & end:
-                return res
-            res += 1
-            
-            if len(begin) > len(end):
-                begin, end = end, begin
-                
-            wordList -= begin
+        box = set(wordList)
+        vec = [(beginWord, 1)]
+        while vec:
+            word, length = vec.pop(0)
+            if word == endWord:
+                return length
+            for i in xrange(len(word)):
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    next_word = word[:i] + c + word[i+1:]
+                    if next_word in box:
+                        box.remove(next_word)
+                        vec.append((next_word, length+1))
             
         return 0

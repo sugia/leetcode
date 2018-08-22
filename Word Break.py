@@ -29,10 +29,12 @@ class Solution(object):
         :type wordDict: List[str]
         :rtype: bool
         """
-        dp = [False for i in xrange(len(s) + 1)]
-        dp[0] = True
-        for i in xrange(1, len(s) + 1):
-            for word in wordDict:
-                if i - len(word) >= 0 and dp[i-len(word)] and s[i-len(word):i] == word:
-                    dp[i] = True
-        return dp[-1]
+        f = [False for i in xrange(len(s)+1)]
+        f[0] = True
+        for i in xrange(1, len(s)+1):
+            for j in xrange(1, i+1):
+                if f[j-1] and s[j-1:i] in wordDict:
+                    f[i] = True
+                    break
+        return f[-1]
+

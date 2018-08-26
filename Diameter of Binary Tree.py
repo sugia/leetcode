@@ -21,30 +21,28 @@ Note: The length of path between two nodes is represented by the number of edges
 #         self.left = None
 #         self.right = None
 
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
 class Solution(object):
     def diameterOfBinaryTree(self, root):
         """
         :type root: TreeNode
         :rtype: int
         """
-        if not root:
-            return 0
-        
-        return self.find(root, 0)[1]
+        self.ans = 0
+        self.find(root)
+        return self.ans
     
-    def find(self, root, d):
-        if root.left:
-            if root.right:
-                left_d, d = self.find(root.left, d)
-                right_d, d = self.find(root.right, d)
-                return max(left_d, right_d) + 1, max(d, left_d + right_d + 2)
-            else:
-                left_d, d = self.find(root.left, d)
-                return left_d + 1, max(d, left_d + 1)
-        else:
-            if root.right:
-                right_d, d = self.find(root.right, d)
-                return right_d + 1, max(d, right_d + 1)
-            else:
-                return 0, d
+    def find(self, node):
+        if not node:
+            return 0
+        left = self.find(node.left)
+        right = self.find(node.right)
+        self.ans = max(self.ans, left + right)
+        return max(left, right) + 1
         

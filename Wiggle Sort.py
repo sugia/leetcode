@@ -15,9 +15,15 @@ class Solution(object):
         :type nums: List[int]
         :rtype: void Do not return anything, modify nums in-place instead.
         """
-        
-        nums.sort()
-        for i in xrange(1, len(nums)-1, 2):
-            nums[i], nums[i+1] = nums[i+1], nums[i]
+        if len(nums) < 2:
+            return
+        up = True
+        for i in xrange(len(nums)-1):
+            if nums[i] < nums[i+1] and not up:
+                nums[i], nums[i+1] = nums[i+1], nums[i]
+            if nums[i] > nums[i+1] and up:
+                nums[i], nums[i+1] = nums[i+1], nums[i]
+            up = not up
+            
             
         

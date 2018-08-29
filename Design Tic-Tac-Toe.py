@@ -59,8 +59,13 @@ class TicTacToe(object):
         Initialize your data structure here.
         :type n: int
         """
-        self.box = [['' for j in xrange(n)] for i in xrange(n)]
-
+        self.board = [[0 for j in xrange(n)] for i in xrange(n)]
+        self.n = n
+        self.row = [0 for i in xrange(n)]
+        self.col = [0 for i in xrange(n)]
+        self.upright = 0
+        self.downright = 0
+        
     def move(self, row, col, player):
         """
         Player {player} makes a move at ({row}, {col}).
@@ -76,46 +81,36 @@ class TicTacToe(object):
         :type player: int
         :rtype: int
         """
-        
-        self.box[row][col] = player
-        
-        flag = True
-        for j in xrange(len(self.box[row])):
-            if  self.box[row][j] != player:
-                flag = False
-                break
-        if flag:
-            return player
-        
-        flag = True
-        for i in xrange(len(self.box)):
-            if self.box[i][col] != player:
-                flag = False
-                break
-        if flag:
-            return player
+        self.board[row][col] = player
         
         if row == col:
-            flag = True
-            for i in xrange(len(self.box)):
-                if self.box[i][i] != player:
-                    flag = False
-                    break
-            if flag:
-                return player
-            
-        if row + col == len(self.box) - 1:
-            flag = True
-            for i in xrange(len(self.box)):
-                if self.box[i][len(self.box) - i - 1] != player:
-                    flag = False
-                    break
-            if flag:
+            if player == 1:
+                self.downright += 1
+            else:
+                self.downright -= 1
+            if abs(self.downright) == self.n:
                 return player
         
+        if row + col + 1 == self.n:
+            if player == 1:
+                self.upright += 1
+            else:
+                self.upright -= 1
+            if abs(self.upright) == self.n:
+                return player
+        
+        if player == 1:
+            self.row[row] += 1
+            self.col[col] += 1
+        else:
+            self.row[row] -= 1
+            self.col[col] -= 1
+        if abs(self.row[row]) == self.n or abs(self.col[col]) == self.n:
+            return player
         return 0
-        
+    
 
+                    
 
 # Your TicTacToe object will be instantiated and called as such:
 # obj = TicTacToe(n)

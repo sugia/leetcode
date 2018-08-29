@@ -37,8 +37,8 @@ class RandomizedCollection(object):
         """
         Initialize your data structure here.
         """
-        self.dic = {}
-        self.total = 0
+        self.val = []
+        self.idx = {}
         
     def insert(self, val):
         """
@@ -46,44 +46,50 @@ class RandomizedCollection(object):
         :type val: int
         :rtype: bool
         """
-        if val in self.dic:
-            self.dic[val] += 1
-            self.total += 1
+        if val in self.idx:
+            self.val.append(val)
+            self.idx[val].add(len(self.val)-1)
             return False
         else:
-            self.dic[val] = 1
-            self.total += 1
+            self.val.append(val)
+            self.idx[val] = set([len(self.val)-1])
             return True
         
+
     def remove(self, val):
         """
         Removes a value from the collection. Returns true if the collection contained the specified element.
         :type val: int
         :rtype: bool
         """
-        if val in self.dic:
-            self.dic[val] -= 1
-            self.total -= 1
-            if self.dic[val] == 0:
-                del self.dic[val]
+        if val in self.idx:
+            if val == self.val[-1]:
+                val_idx = max(self.idx[val])
+                self.val.pop()
+                self.idx[val].remove(val_idx)
+            else:
+                last_val = self.val[-1]
+                last_idx = max(self.idx[last_val])
+                val_idx = max(self.idx[val])
+                self.val[last_idx], self.val[val_idx] = self.val[val_idx], self.val[last_idx]
+                
+                self.val.pop()
+                self.idx[last_val].remove(last_idx)
+                self.idx[val].remove(val_idx)
+                self.idx[last_val].add(val_idx)
+                
+            if not self.idx[val]:
+                del self.idx[val]
             return True
         else:
             return False
-        
+
     def getRandom(self):
         """
         Get a random element from the collection.
         :rtype: int
         """
-        val = random.random()
-        tmp = 0
-        for key in self.dic:
-            tmp += self.dic[key]
-            if tmp * 1.0 / self.total >= val:
-                return key
-    
-        
-        
+        return random.choice(self.val)
 
 
 # Your RandomizedCollection object will be instantiated and called as such:

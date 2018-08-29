@@ -33,53 +33,59 @@ randomSet.getRandom();
 
 '''
 
-import random
-
 class RandomizedSet(object):
 
     def __init__(self):
         """
         Initialize your data structure here.
         """
-        self.vec = []
+        self.val = []
         self.idx = {}
-
+        
     def insert(self, val):
         """
-        Inserts a value to the set. Returns true if the set did not already contain the specified element.
+        Inserts a value to the collection. Returns true if the collection did not already contain the specified element.
         :type val: int
         :rtype: bool
         """
-        if val not in self.idx:
-            self.vec.append(val)
-            self.idx[val] = len(self.vec) - 1
+        if val in self.idx:
+            return False
+        else:
+            self.val.append(val)
+            self.idx[val] = len(self.val)-1
             return True
-        return False
+        
 
     def remove(self, val):
         """
-        Removes a value from the set. Returns true if the set contained the specified element.
+        Removes a value from the collection. Returns true if the collection contained the specified element.
         :type val: int
         :rtype: bool
         """
-        
-        if val not in self.idx:
+        if val in self.idx:
+            if val == self.val[-1]:
+                self.val.pop()
+                del self.idx[val]
+            else:
+                last_val = self.val[-1]
+                last_idx = self.idx[last_val]
+                val_idx = self.idx[val]
+                
+                self.val[val_idx], self.val[last_idx] = self.val[last_idx], self.val[val_idx]
+                self.val.pop()
+                del self.idx[last_val]
+                del self.idx[val]
+                self.idx[last_val] = val_idx
+            return True
+        else:
             return False
-        
-        idx = self.idx[val]
-        last = len(self.vec) - 1
-        self.idx[self.vec[last]] = idx
-        self.vec[idx] = self.vec[last]
-        del self.idx[val]
-        self.vec.pop()
-        return True
 
     def getRandom(self):
         """
-        Get a random element from the set.
+        Get a random element from the collection.
         :rtype: int
         """
-        return self.vec[random.randint(0, len(self.vec) - 1)]
+        return random.choice(self.val)
 
 
 # Your RandomizedSet object will be instantiated and called as such:

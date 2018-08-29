@@ -1,19 +1,21 @@
 '''
-Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+Given a n x n matrix where each of the rows and columns are sorted in ascending order, find the kth smallest element in the matrix.
 
-Note: 
-You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+Note that it is the kth smallest element in the sorted order, not the kth distinct element.
 
-Example 1:
+Example:
 
-Input: root = [3,1,4,null,2], k = 1
-Output: 1
-Example 2:
+matrix = [
+   [ 1,  5,  9],
+   [10, 11, 13],
+   [12, 13, 15]
+],
+k = 8,
 
-Input: root = [5,3,6,2,4,null,null,1], k = 3
-Output: 3
-Follow up:
-What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+return 13.
+
+Note:
+You may assume k is always valid, 1 ≤ k ≤ n2.
 '''
 
 # Definition for a binary tree node.
@@ -23,30 +25,25 @@ What if the BST is modified (insert/delete operations) often and you need to fin
 #         self.left = None
 #         self.right = None
 
-import heapq
-
 class Solution(object):
-    def kthSmallest(self, root, k):
+    def kthSmallest(self, matrix, k):
         """
-        :type root: TreeNode
+        :type matrix: List[List[int]]
         :type k: int
         :rtype: int
         """
-        if not root:
-            return -1
-        heap = []
-        vec = [root]
-        while len(vec) > 0:
-            next_vec = []
-            for node in vec:
-                heapq.heappush(heap, node.val)
-                if node.left:
-                    next_vec.append(node.left)
-                if node.right:
-                    next_vec.append(node.right)
-            vec = next_vec
-        res = -1
-        for i in xrange(k):
-            res = heapq.heappop(heap)
-            
-        return res
+        visited = [[False for j in xrange(len(matrix[0]))] for i in xrange(len(matrix))]
+        h = []
+        heapq.heappush(h, (matrix[0][0], 0, 0))
+        visited[0][0] = True
+        for _ in xrange(k):
+            val, x, y = heapq.heappop(h)
+            if _ == k-1:
+                return val
+            if x+1 < len(matrix) and not visited[x+1][y]:
+                visited[x+1][y] = True
+                heapq.heappush(h, (matrix[x+1][y], x+1, y))
+            if y+1 < len(matrix[0]) and not visited[x][y+1]:
+                visited[x][y+1] = True
+                heapq.heappush(h, (matrix[x][y+1], x, y+1))
+        return -1

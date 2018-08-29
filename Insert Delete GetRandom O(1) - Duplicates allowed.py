@@ -64,22 +64,27 @@ class RandomizedCollection(object):
         """
         if val in self.idx:
             if val == self.val[-1]:
-                val_idx = max(self.idx[val])
-                self.val.pop()
-                self.idx[val].remove(val_idx)
-            else:
-                last_val = self.val[-1]
-                last_idx = max(self.idx[last_val])
-                val_idx = max(self.idx[val])
-                self.val[last_idx], self.val[val_idx] = self.val[val_idx], self.val[last_idx]
+                val_idx = len(self.val)-1
                 
                 self.val.pop()
+                self.idx[val].remove(val_idx)
+                if not self.idx[val]:
+                    del self.idx[val]
+            else:
+                last_val = self.val[-1]
+                last_idx = len(self.val)-1
+                val_idx = max(self.idx[val])
+                
+                self.val[val_idx], self.val[last_idx] = self.val[last_idx], self.val[val_idx]
+                self.val.pop()
+                
                 self.idx[last_val].remove(last_idx)
                 self.idx[val].remove(val_idx)
                 self.idx[last_val].add(val_idx)
-                
-            if not self.idx[val]:
-                del self.idx[val]
+                if not self.idx[val]:
+                    del self.idx[val]
+            
+
             return True
         else:
             return False

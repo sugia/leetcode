@@ -22,26 +22,17 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[List[int]]
         """
-        word_idx = {}
-        for idx, word in enumerate(words):
-            word_idx[word] = idx
+        dic = {}
+        for i in xrange(len(words)):
+            dic[words[i][::-1]] = i
             
         res = []
-        for word, idx in word_idx.iteritems():
-            for i in xrange(len(word) + 1):
-                prefix = word[:i]
-                suffix = word[i:]
-                
-                if self.valid(prefix):
-                    tmp = suffix[::-1]
-                    if tmp in word_idx and word_idx[tmp] != idx and [word_idx[tmp], idx] not in res:
-                        res.append([word_idx[tmp], idx])
-                if self.valid(suffix):
-                    tmp = prefix[::-1]
-                    if tmp in word_idx and word_idx[tmp] != idx and [idx, word_idx[tmp]] not in res:
-                        res.append([idx, word_idx[tmp]])
-                        
+        for i in xrange(len(words)):
+            for j in xrange(len(words[i])+1):
+                prefix = words[i][:j]
+                suffix = words[i][j:]
+                if prefix in dic and suffix == suffix[::-1] and i != dic[prefix] and [i, dic[prefix]] not in res:
+                    res.append([i, dic[prefix]])
+                if suffix in dic and prefix == prefix[::-1] and i != dic[suffix] and [dic[suffix], i] not in res:
+                    res.append([dic[suffix], i])
         return res
-    
-    def valid(self, x):
-        return x == x[::-1]

@@ -38,24 +38,19 @@ class Solution(object):
         :rtype: List[str]
         """
         res = []
-        if not num:
-            return res
-
         for i in xrange(1, len(num)+1):
-            if i == 1 or (i > 1 and num[0] != '0'):
-                self.find(num[i:], int(num[:i]), target, num[:i], res, int(num[:i]))
-        
+            if str(int(num[:i])) == num[:i]:
+                self.find(num[i:], int(num[:i]), target, int(num[:i]), str(num[:i]), res)
         return res
     
-    def find(self, num, tmpsum, target, tmp, res, last):
+    def find(self, num, val, target, last, tmp, res):
         if not num:
-            if tmpsum == target:
+            if val == target:
                 res.append(tmp)
             return
-        
         for i in xrange(1, len(num)+1):
-            if i == 1 or (i > 1 and num[0] != '0'):
-                self.find(num[i:], tmpsum + int(num[:i]), target, tmp + '+' + num[:i], res, int(num[:i]))
-                self.find(num[i:], tmpsum - int(num[:i]), target, tmp + '-' + num[:i], res, -int(num[:i]))
-                self.find(num[i:], tmpsum - last + last * int(num[:i]), target, tmp + '*' + num[:i], res, last * int(num[:i]))
+            if str(int(num[:i])) == num[:i]:
+                self.find(num[i:], val + int(num[:i]), target, int(num[:i]), tmp + '+' + num[:i], res)
+                self.find(num[i:], val - int(num[:i]), target, -int(num[:i]), tmp + '-' + num[:i], res)
+                self.find(num[i:], val - last + last * int(num[:i]), target, last * int(num[:i]), tmp + '*' + num[:i], res)
                 

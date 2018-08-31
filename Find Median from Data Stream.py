@@ -28,46 +28,30 @@ class MedianFinder(object):
         """
         initialize your data structure here.
         """
-        self.small = []
-        self.large = []
+        self.a = []
+        self.b = []
 
     def addNum(self, num):
         """
         :type num: int
         :rtype: void
         """
+        heapq.heappush(self.a, -num)
+        top = -heapq.heappop(self.a)
+        heapq.heappush(self.b, top)
         
-        if not self.small:
-            heapq.heappush(self.small, -num)
-        else:
-            heapq.heappush(self.large, num)
-            
-        while self.small and self.large and -self.small[0] > self.large[0]:
-            if len(self.small) > len(self.large):
-                top = -heapq.heappop(self.small)
-                heapq.heappush(self.large, top)
-            else:
-                top = heapq.heappop(self.large)
-                heapq.heappush(self.small, -top)
+        if len(self.a) < len(self.b):
+            top = heapq.heappop(self.b)
+            heapq.heappush(self.a, -top)
         
-        while len(self.small) - len(self.large) > 1:
-            top = -heapq.heappop(self.small)
-            heapq.heappush(self.large, top)
-            
-        while len(self.large) - len(self.small) > 1:
-            top = heapq.heappop(self.large)
-            heapq.heappush(self.small, -top)
-            
     def findMedian(self):
         """
         :rtype: float
         """
-        if len(self.small) == len(self.large):
-            return (-self.small[0] + self.large[0]) / 2.0
-        elif len(self.small) > len(self.large):
-            return -self.small[0] * 1.0
+        if len(self.a) == len(self.b):
+            return (-self.a[0] + self.b[0]) * 0.5
         else:
-            return self.large[0] * 1.0
+            return -self.a[0] * 1.0
 
 
 # Your MedianFinder object will be instantiated and called as such:

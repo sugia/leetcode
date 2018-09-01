@@ -57,7 +57,7 @@ class ZigzagIterator(object):
                 return True
             else:
                 count += 1
-            if count == 2:
+            if count == len(self.v):
                 return False
         return False
             

@@ -35,6 +35,7 @@ Output: 2
 Explanation: Longest consecutive sequence path is 2-3, not 3-2-1, so return 2.
 '''
 
+
 # Definition for a binary tree node.
 # class TreeNode(object):
 #     def __init__(self, x):
@@ -48,22 +49,21 @@ class Solution(object):
         :type root: TreeNode
         :rtype: int
         """
-        res = 0
-        if not root:
-            return res
-        vec = [(root, 1)]
-        while vec:
-            node, length = vec.pop()
-            res = max(res, length)
-            if node.left:
-                if node.left.val == node.val + 1:
-                    vec.append((node.left, length+1))
-                else:
-                    vec.append((node.left, 1))
-            if node.right:
-                if node.right.val == node.val + 1:
-                    vec.append((node.right, length+1))
-                else:
-                    vec.append((node.right, 1))
+        self.res = 0
+        self.find(root)
+        return self.res
+    
+    def find(self, node):
+        if not node:
+            return 0
+        left = self.find(node.left)
+        right = self.find(node.right)
+        res = 1
+        if node.left and node.val+1 == node.left.val:
+            res = max(res, left+1)
+        if node.right and node.val+1 == node.right.val:
+            res = max(res, right+1)
+        self.res = max(self.res, res)
         return res
+            
             

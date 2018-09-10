@@ -23,4 +23,15 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        return min(nums)
+        left = 0
+        right = len(nums)-1
+        while left < right:
+            mid = (left + right) // 2
+            if nums[left] < nums[right]:
+                right = mid - 1
+            else:
+                if nums[mid] < nums[right]:
+                    right = mid
+                else:
+                    left = mid + 1
+        return nums[left]

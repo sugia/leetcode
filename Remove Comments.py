@@ -87,9 +87,6 @@ class Solution(object):
                         in_comment = True
                         j += 2
                     elif j+1 < len(source[i]) and source[i][j:j+2] == '//':
-                        if tmp:
-                            res.append(tmp)
-                            tmp = ''
                         break
                     else:
                         tmp += source[i][j]

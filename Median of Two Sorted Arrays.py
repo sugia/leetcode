@@ -23,7 +23,6 @@ The median is (2 + 3)/2 = 2.5
 
 
 '''
-
 class Solution(object):
     def findMedianSortedArrays(self, nums1, nums2):
         """
@@ -31,9 +30,26 @@ class Solution(object):
         :type nums2: List[int]
         :rtype: float
         """
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+        nums1 = [float('-inf')] + nums1 + [float('inf')]
+        nums2 = [float('-inf')] + nums2 + [float('inf')]
+        l = len(nums1) + len(nums2)
+        k = (l+1) // 2
         
-        vec = sorted(nums1 + nums2)
-        if len(vec) & 1:
-            return vec[len(vec) // 2]
-        else:
-            return 0.5 * (vec[(len(vec) - 1) // 2] + vec[len(vec) // 2])
+        left = 0
+        right = len(nums1)-1
+        while left <= right:
+            mid = (left + right) // 2
+            idx = k - mid - 2
+            if max(nums1[mid], nums2[idx]) <= min(nums1[mid+1], nums2[idx+1]):
+                if l & 1:
+                    return max(nums1[mid], nums2[idx])
+                else:
+                    return 0.5 * (max(nums1[mid], nums2[idx]) + min(nums1[mid+1], nums2[idx+1]))
+            else:
+                if nums1[mid] < nums2[idx]:
+                    left = mid + 1
+                else:
+                    right = mid - 1
+        

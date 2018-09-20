@@ -20,24 +20,19 @@ class Solution(object):
         :type n: int
         :rtype: int
         """
-        dic = {}
+        candidate = 0
+        for i in xrange(1, n):
+            if knows(candidate, i):
+                candidate = i
+        
+        for i in xrange(candidate):
+            if knows(candidate, i):
+                return -1
+        
         for i in xrange(n):
-            # test if label i is celebrity
-            is_celebrity = True
-            for j in xrange(n):
-                if i == j:
-                    continue
-                if self.knows(j, i, dic) and not self.knows(i, j, dic):
-                    pass
-                else:
-                    is_celebrity = False
-                    break
-            if is_celebrity:
-                return i
-            
-        return -1
-    
-    def knows(self, a, b, dic):
-        if (a, b) not in dic:
-            dic[(a, b)] = knows(a, b)
-        return dic[(a, b)]
+            if i == candidate:
+                continue
+            if not knows(i, candidate):
+                return -1
+        
+        return candidate

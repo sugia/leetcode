@@ -26,29 +26,36 @@ class Solution(object):
         :type s: str
         :rtype: int
         """
-        
-        res = 0
-        signs = [1, 1]
-        i = 0
-        while i < len(s):
-            if s[i].isdigit():
-                start = i
-                i += 1
-                while i < len(s) and s[i].isdigit():
-                    i += 1
-                res += signs.pop() * int(s[start:i])
-            elif s[i] == '+':
-                signs.append(signs[-1])
-                i += 1
-            elif s[i] == '-':
-                signs.append(-signs[-1])
-                i += 1
-            elif s[i] == '(':
-                signs.append(signs[-1])
-                i += 1
-            elif s[i] == ')':
-                signs.pop()
-                i += 1
+        s = s.replace(' ', '')
+        return self.cal(s, 0)[0]
+    
+    def update(self, stack, op, tmp):
+        if op == '+':
+            stack.append(tmp)
+        elif op == '-':
+            stack.append(-tmp)
+        elif op == '*':
+            stack[-1] *= tmp
+        elif op == '/':
+            stack[-1] //= tmp
+            
+    def cal(self, s, idx):
+        stack = []
+        op = '+'
+        tmp = 0
+        while idx < len(s):
+            if s[idx].isdigit():
+                tmp = tmp * 10 + int(s[idx])
+                idx += 1
+            elif s[idx] == '(':
+                tmp, idx = self.cal(s, idx+1)
+            elif s[idx] == ')':
+                self.update(stack, op, tmp)
+                return sum(stack), idx+1
             else:
-                i += 1
-        return res
+                self.update(stack, op, tmp)
+                op = s[idx]
+                tmp = 0
+                idx += 1
+        self.update(stack, op, tmp)
+        return sum(stack), idx

@@ -37,7 +37,10 @@ class Solution(object):
         elif op == '*':
             stack[-1] = stack[-1] * tmp
         elif op == '/':
-            stack[-1] = stack[-1] // tmp
+            if stack[-1] >= 0:
+                stack[-1] //= tmp
+            else:
+                stack[-1] = -(-stack[-1] // tmp)
         
     def cal(self, s, idx):
         '''

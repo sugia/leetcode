@@ -24,43 +24,24 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
-        if not grid:
-            return 0
-        row_sum = [0 for i in xrange(len(grid))]
-        col_sum = [0 for j in xrange(len(grid[0]))]
         
-        for i in xrange(len(grid)):
-            for j in xrange(len(grid[0])):
-                row_sum[i] += grid[i][j]
-                col_sum[j] += grid[i][j]
-                
+        rows, cols = self.getRowsCols(grid)
+        return self.getDis(rows, rows[len(rows) // 2]) + self.getDis(cols, cols[len(cols) // 2])
+        
+    def getRowsCols(self, grid):
+        rows = []
+        cols = []
+        for r in xrange(len(grid)):
+            for c in xrange(len(grid[r])):
+                if grid[r][c] == 1:
+                    rows.append(r)
+                    cols.append(c)
+        return sorted(rows), sorted(cols)
+    
+    def getDis(self, points, median):
         res = 0
-        res += self.getSum(row_sum)
-        res += self.getSum(col_sum)
-        
+        for p in points:
+            res += abs(p - median)
         return res
     
-    def getSum(self, vec):
-        tmp_left = [0 for i in xrange(len(vec))]
-        acc_left = [0 for i in xrange(len(vec))]
-        acc_left[0] = vec[0]
-        
-        for i in xrange(1, len(vec)):
-            tmp_left[i] = tmp_left[i-1] + acc_left[i-1]
-            acc_left[i] = acc_left[i-1] + vec[i]
-            
-        tmp_right = [0 for i in xrange(len(vec))]
-        acc_right = [0 for i in xrange(len(vec))]
-        acc_right[-1] = vec[-1]
-        for i in reversed(xrange(len(vec) - 1)):
-            tmp_right[i] = tmp_right[i+1] + acc_right[i+1]
-            acc_right[i] = acc_right[i+1] + vec[i]
-            
-        idx = 0
-        for i in xrange(len(vec)):
-            if tmp_left[i] + tmp_right[i] < tmp_left[idx] + tmp_right[idx]:
-                idx = i
-        
-
-        return tmp_left[idx] + tmp_right[idx]
         

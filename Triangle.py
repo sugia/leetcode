@@ -22,23 +22,10 @@ class Solution(object):
         :type triangle: List[List[int]]
         :rtype: int
         """
+        
         if not triangle:
             return 0
-        if len(triangle) == 1:
-            return triangle[0][0]
-
-        for i in xrange(1, len(triangle)):
+        for i in reversed(xrange(len(triangle)-1)):
             for j in xrange(i+1):
-                
-                if j == 0:
-                    triangle[i][j] += triangle[i-1][j]
-                elif j == i:
-                    triangle[i][j] += triangle[i-1][j-1]
-                else:
-                    triangle[i][j] += min(triangle[i-1][j-1], triangle[i-1][j])
-                
-        res = float('inf')
-        for j in xrange(len(triangle[-1])):
-            res = min(res, triangle[-1][j])
-            
-        return res
+                triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1])
+        return triangle[0][0]

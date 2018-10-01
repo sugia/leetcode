@@ -81,39 +81,31 @@ Output:
 #         self.left = None
 #         self.right = None
 
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
 class Solution(object):
     def verticalOrder(self, root):
         """
         :type root: TreeNode
         :rtype: List[List[int]]
         """
+        dic = {}
+        self.find(root, 0, 0, dic)
         res = []
-        if not root:
-            return res
-        
-        idx_val = {}
-        min_idx = 0
-        max_idx = 0
-        vec = [(root, 0)]
-        while vec:
-            next_vec = []
-            for (node, col) in vec:
-                if col not in idx_val:
-                    idx_val[col] = [node.val]
-                else:
-                    idx_val[col].append(node.val)
-                
-                min_idx = min(min_idx, col)
-                max_idx = max(max_idx, col)
-                
-                if node.left:
-                    next_vec.append((node.left, col-1))
-                if node.right:
-                    next_vec.append((node.right, col+1))
-                    
-            vec = next_vec
-        
-        for idx in xrange(min_idx, max_idx + 1):
-            res.append(idx_val[idx])
-            
+        for col in sorted(dic.keys()):
+            res.append([x[0] for x in sorted(dic[col], key = lambda x: x[1])])
         return res
+    
+    def find(self, node, row, col, dic):
+        if not node:
+            return
+        if col not in dic:
+            dic[col] = []
+        dic[col].append((node.val, row))
+        self.find(node.left, row+1, col-1, dic)
+        self.find(node.right, row+1, col+1, dic)

@@ -22,30 +22,39 @@ cache.get(3);       // returns 3
 cache.get(4);       // returns 4
 '''
 
-import collections
+class ListNode:
+    def __init__(self, key=0, value=0):
+        self.key = key
+        self.value = value
+        self.next = None
+        self.prev = None
+
 class LRUCache(object):
 
     def __init__(self, capacity):
         """
         :type capacity: int
         """
-        self.cache = collections.OrderedDict()
+        self.cache = {}
         self.capacity = capacity
-
+        self.head = ListNode()
+        self.tail = ListNode()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    
     def get(self, key):
         """
         :type key: int
         :rtype: int
         """
         if key in self.cache:
-            value = self.cache[key]
-            del self.cache[key]
-            self.cache[key] = value
+            value = self.cache[key].value
+            self.remove(key)
+            self.add(key, value)
             return value
         else:
             return -1
-        
-
+            
     def put(self, key, value):
         """
         :type key: int
@@ -53,12 +62,33 @@ class LRUCache(object):
         :rtype: void
         """
         if key in self.cache:
-            del self.cache[key]
-            
-        if len(self.cache) == self.capacity:
-            self.cache.popitem(last = False)
+            self.remove(key)
         
-        self.cache[key] = value
+        if len(self.cache) != 0 and len(self.cache) == self.capacity:
+            self.remove(self.tail.prev.key)
+        
+        if len(self.cache) < self.capacity:
+            self.add(key, value)
+            
+    def add(self, key, value):
+        node = ListNode(key, value)
+        next = self.head.next
+        self.head.next = node
+        node.prev = self.head
+        
+        node.next = next
+        next.prev = node
+        
+        self.cache[key] = node
+        
+    def remove(self, key):
+        prev = self.cache[key].prev
+        next = self.cache[key].next
+        prev.next = next
+        next.prev = prev
+        
+        del self.cache[key]
+        
 
 
 # Your LRUCache object will be instantiated and called as such:

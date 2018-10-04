@@ -23,27 +23,21 @@ class Solution(object):
         :type words: List[str]
         :rtype: List[str]
         """
-        dic = {}
-        for a in words:
-            for b in words:
-                if b != a and b in a:
-                    if a not in dic:
-                        dic[a] = set([b])
-                    else:
-                        dic[a].add(b)
-        
+        words.sort(key = lambda x: len(x))
         res = []
-        for a in dic:
-            if self.valid(a, dic[a]):
-                res.append(a)
+        pre = set()
+        for i in xrange(len(words)):
+            if words[i] and self.valid(words[i], pre):
+                res.append(words[i])
+            pre.add(words[i])
         return res
     
     def valid(self, s, words):
         f = {-1: True}
         for i in xrange(len(s)):
             f[i] = False
-            for word in words:
-                if i - len(word) >= -1 and f[i-len(word)] and s[i-len(word)+1:i+1] == word:
+            for j in xrange(i+1):
+                if f[j-1] and s[j:i+1] in words:
                     f[i] = True
                     break
         return f[len(s)-1]

@@ -20,58 +20,46 @@ class Solution(object):
         :type dict: List[str]
         :rtype: List[str]
         """
-        
+        # abbr: (i, word, first_dis_idx)
         dic = {}
         for i in xrange(len(dict)):
-            k = self.getInitialKey(dict[i])
-            if k in dic:
-                dic[k].append(i)
+            abbr, idx = self.getAbbr(dict[i])
+            if abbr in dic:
+                dic[abbr].append((i, dict[i], idx))
             else:
-                dic[k] = [i]
+                dic[abbr] = [(i, dict[i], idx)]
         
-        flag = True
-        while flag:
-            flag = False
-            kk = None
-            for k, v in dic.iteritems():
-                if len(v) > 1:
-                    flag = True
-                    kk = k
-                    break
-            if kk:
-                vv = dic[kk]
-                del dic[kk]
-                for v in vv:
-                    k = self.extendKey(dict[v], kk)
-                    if k in dic:
-                        dic[k].append(v)
+        while True:
+            keys = []
+            for key in dic:
+                if len(dic[key]) > 1:
+                    keys.append(key)
+            if not keys:
+                break
+            for key in keys:
+                vec = dic.pop(key)
+                for i, word, idx in vec:
+                    new_word, new_idx = self.extendAbbr(word, idx)
+                    if new_word in dic:
+                        dic[new_word].append((i, word, new_idx))
                     else:
-                        dic[k] = [v]
-        
+                        dic[new_word] = [(i, word, new_idx)]
             
         res = ['' for i in xrange(len(dict))]
-        for k, v in dic.iteritems():
-            res[v[0]] = k
+        for key in dic:
+            i, word, idx = dic[key][0]
+            res[i] = key
         return res
-        
-    def getInitialKey(self, key):
-        if len(key) < 3:
-            return key
-        res = key[0] + str(len(key)-2) + key[-1]
-        if len(res) < len(key):
-            return res
-        else:
-            return key
-        
-    def extendKey(self, key, prev):
-        idx = -1
-        for i in xrange(len(prev)):
-            if prev[i].isdigit():
-                idx = i
-                break
-        if idx == -1:
-            return key
-        res = key[:idx+1] + str(len(key) - (idx + 2)) + key[-1]
-        if len(res) < len(key):
-            return res
-        return key
+            
+    def getAbbr(self, word):
+        # return abbr, idx
+        if len(word) < 4:
+            return word, -1
+        return word[0] + str(len(word)-2) + word[-1], 1
+    
+    def extendAbbr(self, word, idx):
+        # return abbr, idx
+        new_idx = idx + 1
+        if new_idx >= len(word) - 2:
+            return word, -1
+        return word[:new_idx] + str(len(word) - (new_idx+1)) + word[-1], new_idx

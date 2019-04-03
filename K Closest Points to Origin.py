@@ -43,38 +43,20 @@ class Solution(object):
         points.sort(key = lambda x: math.sqrt(x[0] ** 2 + x[1] ** 2))
         return points[:K]
         '''
-        '''
-        h = []
-        for point in points:
-            heapq.heappush(h, (-point[0] ** 2 - point[1] ** 2, point))
-            if len(h) > K:
-                heapq.heappop(h)
-        return list(map(lambda x: x[1], h))
-        '''
-        left = 0
-        right = len(points) - 1
-        while left <= right:
-            mid = self.get(points, left, right)
-            if mid == K:
-                break
-            elif mid < K:
-                left = mid + 1
-            else:
-                right = mid - 1
-
-        return points[:K]
-    
-    def get(self, points, left, right):
-        measurement = self.distance(points[right])
-        left_vec = []
-        right_vec = []
-        for i in xrange(left, right+1):
-            if self.distance(points[i]) <= measurement:
-                left_vec.append(points[i])
-            else:
-                right_vec.append(points[i])
-        points[left:right+1] = left_vec + right_vec
-        return left + len(left_vec) - 1
         
-    def distance(self, point):
-        return point[0] ** 2 + point[1] ** 2
+        idx = self.partition(points)
+        if idx + 1 == K:
+            return points[:K]
+        elif idx + 1 < K:
+            return points[:idx+1] + self.kClosest(points[idx+1:], K - (idx + 1))
+        else:
+            return self.kClosest(points[:idx], K)
+        
+    def partition(self, points):
+        idx = 0
+        for i in xrange(len(points)):
+            if points[i][0] ** 2 + points[i][1] ** 2 < points[-1][0] ** 2 + points[-1][1] ** 2:
+                points[i], points[idx] = points[idx], points[i]
+                idx += 1
+        points[-1], points[idx] = points[idx], points[-1]
+        return idx

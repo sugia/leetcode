@@ -46,7 +46,7 @@ class Solution(object):
         
         idx = self.partition(points)
         if idx + 1 == K:
-            return points[:K]
+            return points[:idx+1]
         elif idx + 1 < K:
             return points[:idx+1] + self.kClosest(points[idx+1:], K - (idx + 1))
         else:

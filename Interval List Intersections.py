@@ -41,19 +41,19 @@ class Solution(object):
         res = []
         i = 0
         j = 0
+        
         while i < len(A) and j < len(B):
-            if B[j].start <= A[i].start <= B[j].end\
-                or B[j].start <= A[i].end <= B[j].end\
-                or A[i].start <= B[j].start <= A[i].end\
-                or A[i].start <= B[j].end <= A[i].end:
-                res.append(Interval(max(A[i].start, B[j].start), min(A[i].end, B[j].end)))
-                
+            s = max(A[i].start, B[j].start)
+            e = min(A[i].end, B[j].end)
+            if s <= e:
+                res.append(Interval(s=s, e=e))
+            
             if A[i].end < B[j].end:
                 i += 1
-            elif B[j].end < A[i].end:
+            elif A[i].end > B[j].end:
                 j += 1
             else:
                 i += 1
                 j += 1
-                
+        
         return res

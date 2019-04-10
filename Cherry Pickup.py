@@ -47,35 +47,37 @@ class Solution(object):
         :type grid: List[List[int]]
         :rtype: int
         """
-        f = [[[float('-inf') for i in xrange(len(grid))] for i in xrange(len(grid))] for k in xrange(len(grid) + len(grid[0]) - 1)]
+        
+        if not grid or not grid[0]:
+            return 0
+        
+        f = [[[float('-inf') for rowb in xrange(len(grid))] for rowa in xrange(len(grid))] for k in xrange(len(grid) + len(grid[0]) - 1)]
         if grid[0][0] >= 0:
             f[0][0][0] = grid[0][0]
-        
+            
         for k in xrange(1, len(grid) + len(grid[0]) - 1):
             for rowa in xrange(len(grid)):
                 cola = k - rowa
                 if cola < 0 or len(grid[0]) <= cola or grid[rowa][cola] == -1:
                     continue
-                for rowb in xrange(rowa, len(grid)):
+                
+                for rowb in xrange(len(grid)):
                     colb = k - rowb
                     if colb < 0 or len(grid[0]) <= colb or grid[rowb][colb] == -1:
                         continue
                         
-                    
-                    if 0 <= rowa - 1 and grid[rowa-1][cola] != -1 and grid[rowb-1][colb] != -1:
+                    if 0 <= rowa - 1 and 0 <= rowb - 1:
                         f[k][rowa][rowb] = max(f[k][rowa][rowb], f[k-1][rowa-1][rowb-1])
-                    if 0 <= colb - 1 and grid[rowb][colb-1] != -1 and grid[rowa][cola-1] != -1:
-                        f[k][rowa][rowb] = max(f[k][rowa][rowb], f[k-1][rowa][rowb])
-                    if 0 <= rowa - 1 and grid[rowa-1][cola] != -1 and 0 <= colb - 1 and grid[rowb][colb-1] != -1:
+                    if 0 <= rowa - 1 and 0 <= colb - 1:
                         f[k][rowa][rowb] = max(f[k][rowa][rowb], f[k-1][rowa-1][rowb])
-                    if rowa != rowb:
+                    if 0 <= cola - 1 and 0 <= rowb - 1:
                         f[k][rowa][rowb] = max(f[k][rowa][rowb], f[k-1][rowa][rowb-1])
-                        
+                    if 0 <= cola - 1 and 0 <= colb - 1:
+                        f[k][rowa][rowb] = max(f[k][rowa][rowb], f[k-1][rowa][rowb])
+                    
                     if rowa == rowb:
                         f[k][rowa][rowb] += grid[rowa][cola]
                     else:
                         f[k][rowa][rowb] += grid[rowa][cola] + grid[rowb][colb]
                         
-        return max(0, f[len(grid) + len(grid[0])-2][len(grid)-1][len(grid)-1])
-                        
-                    
+        return max(0, f[-1][-1][-1])       

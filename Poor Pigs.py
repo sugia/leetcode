@@ -9,15 +9,9 @@ If there are n buckets and a pig drinking poison will die within m minutes, how 
 '''
 
 
-import math
-
-class Solution(object):
-    def poorPigs(self, buckets, minutesToDie, minutesToTest):
-        """
-        :type buckets: int
-        :type minutesToDie: int
-        :type minutesToTest: int
-        :rtype: int
-        """
-        
-        return int(math.ceil(math.log(buckets) / math.log(minutesToTest / minutesToDie + 1)))
+class Solution:
+    def poorPigs(self, buckets: int, minutesToDie: int, minutesToTest: int) -> int:
+        pigs = 0
+        while (minutesToTest // minutesToDie + 1) ** pigs < buckets:
+            pigs += 1
+        return pigs

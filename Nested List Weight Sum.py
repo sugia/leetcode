@@ -9,12 +9,11 @@ Given the list [[1,1],2,[1,1]], return 10. (four 1's at depth 2, one 2 at depth 
 Example 2:
 Given the list [1,[4,[6]]], return 27. (one 1 at depth 1, one 4 at depth 2, and one 6 at depth 3; 1 + 4*2 + 6*3 = 27)
 '''
-
 # """
 # This is the interface that allows for creating nested lists.
 # You should not implement it, or speculate about its implementation
 # """
-#class NestedInteger(object):
+#class NestedInteger:
 #    def __init__(self, value=None):
 #        """
 #        If value is not specified, initializes an empty list.
@@ -53,20 +52,21 @@ Given the list [1,[4,[6]]], return 27. (one 1 at depth 1, one 4 at depth 2, and 
 #        :rtype List[NestedInteger]
 #        """
 
-class Solution(object):
-    def depthSum(self, nestedList):
-        """
-        :type nestedList: List[NestedInteger]
-        :rtype: int
-        """
-        res = []
-        self.find(nestedList, 1, res)
-        
-        return sum(res)
+class Solution:
+    def depthSum(self, nestedList: List[NestedInteger]) -> int:
+        vec = nestedList
+        res = 0
+        level = 1
+        while vec:
+            next_vec = []
+            tmp = 0
+            for node in vec:
+                if node.isInteger():
+                    tmp += node.getInteger()
+                else:
+                    next_vec.extend(node.getList())
+            res += level * tmp
+            level += 1
+            vec = next_vec
+        return res
     
-    def find(self, lis, depth, res):
-        for x in lis:
-            if x.isInteger():
-                res.append(x.getInteger() * depth)
-            else:
-                self.find(x.getList(), depth + 1, res)

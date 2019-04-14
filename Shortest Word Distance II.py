@@ -14,58 +14,31 @@ Note:
 You may assume that word1 does not equal to word2, and word1 and word2 are both in the list.
 
 '''
+class WordDistance:
 
-class WordDistance(object):
+    def __init__(self, words: List[str]):
+        self.dic = {}
+        for i, word in enumerate(words):
+            if word not in self.dic:
+                self.dic[word] = []
+            self.dic[word].append(i)
 
-    def __init__(self, words):
-        """
-        :type words: List[str]
-        """
-        
-        self.word_to_idx = {}
-        for i in xrange(len(words)):
-            if words[i] in self.word_to_idx:
-                self.word_to_idx[words[i]].append(i)
-            else:
-                self.word_to_idx[words[i]] = [i]
-        
-        self.memory = {}
-        
-    def shortest(self, word1, word2):
-        """
-        :type word1: str
-        :type word2: str
-        :rtype: int
-        """
-        
-        if (word1, word2) in self.memory:
-            return self.memory[(word1, word2)]
-        if (word2, word1) in self.memory:
-            return self.memory[(word2, word1)]
-        
-        if word1 not in self.word_to_idx or word2 not in self.word_to_idx:
-            return -1
-        
-        if word1 == word2:
-            return 0
-        
+    def shortest(self, word1: str, word2: str) -> int:
+        a = self.dic[word1]
+        b = self.dic[word2]
         i = 0
         j = 0
         res = float('inf')
-        while i < len(self.word_to_idx[word1]) and j < len(self.word_to_idx[word2]):
-            if self.word_to_idx[word1][i] < self.word_to_idx[word2][j]:
-                res = min(res, self.word_to_idx[word2][j] - self.word_to_idx[word1][i])
-                i += 1
-            elif self.word_to_idx[word1][i] == self.word_to_idx[word2][j]:
-                res = min(res, 0)
+        while i < len(a) and j < len(b):
+            res = min(res, abs(a[i] - b[j]))
+            if a[i] == b[j]:
                 break
+            elif a[i] < b[j]:
+                i += 1
             else:
-                res = min(res, self.word_to_idx[word1][i] - self.word_to_idx[word2][j])
                 j += 1
-                
-        self.memory[(word1, word2)] = res
-        
         return res
+
 
 # Your WordDistance object will be instantiated and called as such:
 # obj = WordDistance(words)

@@ -16,7 +16,7 @@ Given the list [1,[4,[6]]], return 17. (one 1 at depth 3, one 4 at depth 2, and 
 # This is the interface that allows for creating nested lists.
 # You should not implement it, or speculate about its implementation
 # """
-#class NestedInteger(object):
+#class NestedInteger:
 #    def __init__(self, value=None):
 #        """
 #        If value is not specified, initializes an empty list.
@@ -55,27 +55,19 @@ Given the list [1,[4,[6]]], return 17. (one 1 at depth 3, one 4 at depth 2, and 
 #        :rtype List[NestedInteger]
 #        """
 
-class Solution(object):
-    def depthSumInverse(self, nestedList):
-        """
-        :type nestedList: List[NestedInteger]
-        :rtype: int
-        """
-        res = []
+class Solution:
+    def depthSumInverse(self, nestedList: List[NestedInteger]) -> int:
         vec = nestedList
+        res = 0
+        tmp = 0
         while vec:
             next_vec = []
-            tmp = 0
-            for x in vec:
-                if x.isInteger():
-                    tmp += x.getInteger()
+            for node in vec:
+                if node.isInteger():
+                    tmp += node.getInteger()
                 else:
-                    next_vec.extend(x.getList())
-            res.append(tmp)
+                    next_vec.extend(node.getList())
+            res += tmp
             vec = next_vec
-            
-        ans = 0
-        for i in xrange(len(res)):
-            ans += res[i] * (len(res) - i)
-            
-        return ans
+        return res
+    

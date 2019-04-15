@@ -9,109 +9,103 @@ Implement a data structure supporting the following operations:
 Challenge: Perform all these in O(1) time complexity. 
 '''
 
-class AllOne(object):
+class Node:
+    def __init__(self, key='', val=0):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+class AllOne:
 
     def __init__(self):
         """
         Initialize your data structure here.
         """
-        self.kv = {}
-        self.maxk = ''
-        self.maxv = float('-inf')
-        self.mink = ''
-        self.minv = float('inf')
+        # key to node
+        self.dic = {}
         
-    def inc(self, key):
+        self.head = Node(key='head', val=float('-inf'))
+        self.tail = Node(key='tail', val=float('inf'))
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def inc(self, key: str) -> None:
         """
         Inserts a new key <Key> with value 1. Or increments an existing key by 1.
-        :type key: str
-        :rtype: void
         """
-        if key in self.kv:
-            self.kv[key] += 1
+        if key not in self.dic:
+            self.dic[key] = Node(key=key, val=1)
+            self.addLink(self.dic[key], self.head)
         else:
-            self.kv[key] = 1
+            self.dic[key].val += 1
+            prev = self.dic[key].prev
+            self.removeLink(self.dic[key])
+            while prev.val < self.dic[key].val:
+                prev = prev.next
             
-        if self.mink == key:
-            self.mink = ''
-            self.minv = float('inf')
-        elif self.minv > self.kv[key]:
-            self.mink = key
-            self.minv = self.kv[key]
+            self.addLink(self.dic[key], prev.prev)
+        
+        # self.display('-----inc {}'.format(key))
+        
             
-        if self.maxv < self.kv[key]:
-            self.maxk = key
-            self.maxv = self.kv[key]
-
-    def dec(self, key):
+    def dec(self, key: str) -> None:
         """
         Decrements an existing key by 1. If Key's value is 1, remove it from the data structure.
-        :type key: str
-        :rtype: void
         """
+        if key not in self.dic:
+            return
         
-        if key in self.kv:
-            self.kv[key] -= 1
-            if self.kv[key] == 0:
-                del self.kv[key]
-                
-                if self.maxk == key:
-                    self.maxk = ''
-                    self.maxv = float('-inf')
-                if self.mink == key:
-                    self.mink = ''
-                    self.minv = float('inf')
-            else:
-                if self.maxk == key:
-                    self.maxk = ''
-                    self.maxv = float('-inf')
-                elif self.maxv < self.kv[key]:
-                    self.maxk = key
-                    self.maxv = self.kv[key]
-                
-                if self.minv > self.kv[key]:
-                    self.mink = key
-                    self.minv = self.kv[key]
+        self.dic[key].val -= 1
+        if self.dic[key].val == 0:
+            self.removeLink(self.dic[key])
+            del self.dic[key]
+        else:
+            next = self.dic[key].next
+            self.removeLink(self.dic[key])
+            while self.dic[key].val < next.val:
+                next = next.prev
+            self.addLink(self.dic[key], next)
         
-    def getMaxKey(self):
+        # self.display('-----dec {}'.format(key))
+            
+    def getMaxKey(self) -> str:
         """
         Returns one of the keys with maximal value.
-        :rtype: str
         """
-        if self.maxk:
-            return self.maxk
-        else:
-            if self.kv:
-                for k, v in self.kv.iteritems():
-                    if v > self.maxv:
-                        self.maxk = k
-                        self.maxv = v
-                return self.maxk
-            else:
-                return ''
+        if self.head.next == self.tail:
+            return ''
+        return self.tail.prev.key
 
-
-    def getMinKey(self):
+    def getMinKey(self) -> str:
         """
         Returns one of the keys with Minimal value.
-        :rtype: str
         """
-        if self.mink:
-            return self.mink
-        else:
-            if self.kv:
-                for k, v in self.kv.iteritems():
-                    if v < self.minv:
-                        self.mink = k
-                        self.minv = v
-                return self.mink
-            else:
-                return ''
+        if self.head.next == self.tail:
+            return ''
+        return self.head.next.key
 
-
+    def addLink(self, node: Node, prev: Node) -> None:
+        next = prev.next
         
-
-
+        node.prev = prev
+        node.next = next
+        prev.next = node
+        next.prev = node
+    
+    def removeLink(self, node: Node) -> None:
+        prev = node.prev
+        next = node.next
+        prev.next = next
+        next.prev = prev
+        
+    def display(self, s: str) -> None:
+        print(s)
+        node = self.head.next
+        while node != self.tail:
+            print(node.key, node.val)
+            node = node.next
+        
 # Your AllOne object will be instantiated and called as such:
 # obj = AllOne()
 # obj.inc(key)
